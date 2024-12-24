@@ -1,0 +1,17 @@
+{
+    "TableName": "ScheduledTasks",
+    "KeySchema": [
+        {
+            "AttributeName": "TaskID",
+            "KeyType": "HASH"
+        }
+    ],
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "TaskID",
+            "AttributeType": "S"
+        }
+    ],
+    "BillingMode": "PAY_PER_REQUEST"
+}
+

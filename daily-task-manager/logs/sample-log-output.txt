@@ -1,0 +1,6 @@
+START RequestId: abc12345-def6-7890-ghij-klmnopqrstuv Version: $LATEST
+Processing task: Daily Backup (ID: task1)
+Task Daily Backup completed at 2024-12-23 09:00:00
+END RequestId: abc12345-def6-7890-ghij-klmnopqrstuv
+REPORT RequestId: abc12345-def6-7890-ghij-klmnopqrstuv Duration: 123.45 ms Billed Duration: 124 ms Memory Size: 128 MB Max Memory Used: 45 MB
+
