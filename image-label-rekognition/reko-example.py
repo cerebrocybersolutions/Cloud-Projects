@@ -5,22 +5,24 @@ from PIL import Image
 from io import BytesIO
 
 def detect_labels(photo, bucket):
+    # Initialize Rekognition client
     client = boto3.client('rekognition')
-    
+
     try:
-        # Detect labels
+        # Detect labels in the image
         response = client.detect_labels(
             Image={'S3Object': {'Bucket': bucket, 'Name': photo}},
-            MaxLabels=10)
+            MaxLabels=10
+        )
     except Exception as e:
         print(f"Error calling Rekognition: {e}")
         return 0
 
-    print('Detected labels for ' + photo)
+    print(f'Detected labels for {photo}')
     for label in response['Labels']:
         print(f"Label: {label['Name']}, Confidence: {label['Confidence']:.2f}%\n")
-    
-    # Load image from S3
+
+    # Load the image from S3
     s3 = boto3.resource('s3')
     try:
         obj = s3.Object(bucket, photo)
@@ -30,8 +32,9 @@ def detect_labels(photo, bucket):
         print(f"Error loading image from S3: {e}")
         return 0
 
-    # Display the image and bounding boxes
+    # Visualize the labels and bounding boxes
     visualize_labels(img, response['Labels'])
+
     return len(response['Labels'])
 
 def visualize_labels(img, labels):
@@ -46,19 +49,21 @@ def visualize_labels(img, labels):
             width = bbox['Width'] * img.width
             height = bbox['Height'] * img.height
 
-            rect = patches.Rectangle((left, top), width, height, linewidth=1, edgecolor='r', facecolor='none')
+            rect = patches.Rectangle((left, top), width, height, linewidth=2, edgecolor='r', facecolor='none')
             ax.add_patch(rect)
 
             label_text = f"{label['Name']} ({label['Confidence']:.2f}%)"
-            plt.text(left, top - 2, label_text, color='r', fontsize=8, bbox=dict(facecolor='white', alpha=0.7))
+            plt.text(left, top - 5, label_text, color='r', fontsize=8, bbox=dict(facecolor='white', alpha=0.7))
 
+    plt.axis('off')
     plt.show()
 
 def main():
-    photo = 'download.jpg'
-    bucket = 'label-images-rekognition'
+    photo = 'download.jpg'  # Update this with the correct image name
+    bucket = 'label-images-rekognition'  # Update this with your bucket name
+
     label_count = detect_labels(photo, bucket)
-    print("Labels detected:", label_count)
+    print(f"Labels detected: {label_count}")
 
 if __name__ == "__main__":
     main()
